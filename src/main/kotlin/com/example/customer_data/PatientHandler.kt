@@ -18,7 +18,13 @@ class PatientHandler(private val patientRepository: PatientRepository) {
 
     suspend fun handlePatient(request: ServerRequest) : ServerResponse {
 
-        val id = request.pathVariable("id")
+        val id  = request.pathVariable("id")
+
+        try {
+            id.toLong()
+        }catch (e:NumberFormatException ){
+            return ServerResponse.badRequest().buildAndAwait()
+        }
 
         val patient:Patient? = patientRepository.findById(id.toLong())
 
@@ -56,6 +62,12 @@ class PatientHandler(private val patientRepository: PatientRepository) {
     suspend fun handleDeletePatient(request: ServerRequest) : ServerResponse {
 
         val id = request.pathVariable("id")
+
+        try {
+            id.toLong()
+        }catch (e:NumberFormatException ){
+            return ServerResponse.badRequest().buildAndAwait()
+        }
 
         patientRepository.deleteById(id.toLong())
 
